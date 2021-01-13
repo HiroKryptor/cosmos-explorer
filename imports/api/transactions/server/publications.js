@@ -6,16 +6,15 @@ import { Blockscon } from '../../blocks/blocks.js';
 publishComposite('transactions.list', function(limit = 30){
     return {
         find(){
-            return Transactions.find({height: { $exists: true}, processed: {$ne: false}},{sort:{height:-1}, limit:limit})
+            return Transactions.find({},{sort:{height:-1}, limit:limit})
         },
         children: [
             {
                 find(tx){
-                    if (tx.height)
-                        return Blockscon.find(
-                            {height:tx.height},
-                            {fields:{time:1, height:1}}
-                        )
+                    return Blockscon.find(
+                        {height:tx.height},
+                        {fields:{time:1, height:1}}
+                    )
                 }
             }
         ]

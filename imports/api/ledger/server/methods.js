@@ -2,7 +2,6 @@ import { HTTP } from 'meteor/http';
 
 Meteor.methods({
     'transaction.submit': function(txInfo) {
-        this.unblock();
         const url = `${LCD}/txs`;
         data = {
             "tx": txInfo.value,
@@ -21,7 +20,6 @@ Meteor.methods({
         }
     },
     'transaction.execute': function(body, path) {
-        this.unblock();
         const url = `${LCD}/${path}`;
         data = {
             "base_req": {
@@ -36,7 +34,6 @@ Meteor.methods({
         }
     },
     'transaction.simulate': function(txMsg, from, path, adjustment='1.2') {
-        this.unblock();
         const url = `${LCD}/${path}`;
         data = {...txMsg,
             "base_req": {

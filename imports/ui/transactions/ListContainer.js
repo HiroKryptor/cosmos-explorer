@@ -9,18 +9,19 @@ export default ValidatorDetailsContainer = withTracker((props) => {
 
     if (Meteor.isClient){
         transactionsHandle = Meteor.subscribe('transactions.list', props.limit);
-        loading = !transactionsHandle.ready();
-
-        if (!loading) {
-            transactions = Transactions.find({}, {sort:{height:-1}}).fetch();
-            console.log(transactions.length)
-            transactionsExist = !loading && !!transactions;
-        }
+        loading = (!transactionsHandle.ready() && props.limit == Meteor.settings.public.initialPageSize);
     }
 
-    if (Meteor.isServer){
+    if (Meteor.isServer || !loading){
         transactions = Transactions.find({}, {sort:{height:-1}}).fetch();
-        transactionsExist = !!transactions;
+
+        if (Meteor.isServer){
+            // loading = false;
+            transactionsExist = !!transactions;
+        }
+        else{
+            transactionsExist = !loading && !!transactions;
+        }
     }
     
     return {

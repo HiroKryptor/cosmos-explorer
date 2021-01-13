@@ -4,11 +4,10 @@ import { Blockscon } from '../../blocks/blocks.js';
 
 Meteor.methods({
     'Validators.findCreateValidatorTime': function(address){
-        this.unblock();
         // look up the create validator time to consider if the validator has never updated the commission
         let tx = Transactions.findOne({$and:[
-            {"tx.value.msg.value.delegator_address":address},
-            {"tx.value.msg.type":"cosmos-sdk/MsgCreateValidator"},
+            {"tx.body.messages.value.delegator_address":address},
+            {"tx.body.messages.type":"cosmos-sdk/MsgCreateValidator"},
             {code:{$exists:false}}
         ]});
 
@@ -25,7 +24,6 @@ Meteor.methods({
     },
     // async 'Validators.getAllDelegations'(address){
     'Validators.getAllDelegations'(address){
-        this.unblock();
         let url = LCD + '/staking/validators/'+address+'/delegations';
 
         try{

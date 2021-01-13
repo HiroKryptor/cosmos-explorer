@@ -8,23 +8,24 @@ const AddressLength = 40;
 const bulkTransactions = Transactions.rawCollection().initializeUnorderedBulkOp();
 
 getTransaction = async (hash) => {
-    // hash = hash.toUpperCase();
+    hash = hash.toUpperCase();
     // console.log("Get tx: "+hash)
     try {
         let url = LCD+ '/txs/'+hash;
         let response = HTTP.get(url);
         let tx = JSON.parse(response.content);
 
+        // console.log(hash);
+
         tx.height = parseInt(tx.height);
         tx.processed = true;
 
-        let txId = Transactions.update({txhash:hash}, {$set:tx});
-        // bulkTransactions.find({txhash:hash}).updateOne({$set:tx});
-        // console.log(bulkTransactions.length)
-        if (txId){
-            return txId;
-        }
-        else return false;
+        // let txId = Transactions.upsert({txhash:hash}, {$set:tx});
+        bulkTransactions.find({txhash:hash}).upsert().updateOne({$set:tx});
+        // if (txId){
+        //     return txId;
+        // }
+        // else return false;
 
     }
     catch(e) {
@@ -33,38 +34,35 @@ getTransaction = async (hash) => {
 }
 
 Meteor.methods({
-    'Transactions.updateTransactions': async function(){
-        this.unblock();
+    'Transactions.updateTransactions': function(){
         if (TXSYNCING)
             return "Syncing transactions...";
-        const transactions = Transactions.find({processed:false},{limit: 300}).fetch();
+        this.unblock();
+        const transactions = Transactions.find({processed:false}).fetch();
         try{
             TXSYNCING = true;
             for (let i in transactions){
                 // console.log(transactions[i]);
                 getTransaction(transactions[i].txhash)
             }
-            // if (bulkTransactions.length > 0){
-            //     // console.log("aaa: %o",bulkTransactions.length)
-            //     bulkTransactions.execute((err, result) => {
-            //         if (err){
-            //             console.log(err);
-            //         }
-            //         if (result){
-            //             console.log(result);
-            //         }
-            //     });
-            // }
+            if (bulkTransactions.length > 0){
+                bulkTransactions.execute((err, result) => {
+                    if (err){
+                        console.log(err);
+                    }
+                    if (result){
+                        // console.log(result);
+                    }
+                });
+            }
         }
         catch (e) {
             TXSYNCING = false;
             return e
         }
         TXSYNCING = false;
-        return transactions.length
     },
     'Transactions.findDelegation': function(address, height){
-        this.unblock();
         // following cosmos-sdk/x/slashing/spec/06_events.md and cosmos-sdk/x/staking/spec/06_events.md
         return Transactions.find({
             $or: [{$and: [
@@ -96,7 +94,6 @@ Meteor.methods({
         ).fetch();
     },
     'Transactions.findUser': function(address, fields=null){
-        this.unblock();
         // address is either delegator address or validator operator address
         let validator;
         if (!fields)

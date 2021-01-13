@@ -39,7 +39,6 @@ AverageValidatorData.rawCollection().createIndex({proposerAddress:1,createdAt:-1
 
 Transactions.rawCollection().createIndex({txhash:1},{unique:true});
 Transactions.rawCollection().createIndex({height:-1});
-Transactions.rawCollection().createIndex({processed:1});
 // Transactions.rawCollection().createIndex({action:1});
 Transactions.rawCollection().createIndex({"logs.events.attributes.key":1});
 Transactions.rawCollection().createIndex({"logs.events.attributes.value":1});

@@ -61,7 +61,6 @@ const getPreviousRecord = (voterAddress, proposerAddress) => {
 
 Meteor.methods({
     'ValidatorRecords.calculateMissedBlocks': function(){
-        this.unblock();
         if (!COUNTMISSEDBLOCKS){
             try {
                 let startTime = Date.now();
@@ -179,7 +178,6 @@ Meteor.methods({
         }
     },
     'ValidatorRecords.calculateMissedBlocksStats': function(){
-        this.unblock();
         // TODO: deprecate this method and MissedBlocksStats collection
         // console.log("ValidatorRecords.calculateMissedBlocks: "+COUNTMISSEDBLOCKS);
         if (!COUNTMISSEDBLOCKSSTATS){
