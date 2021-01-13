@@ -1,0 +1,54 @@
+{
+    "public":{
+        "chainName": "BigSixHero xyzTestnet",
+        "chainId": "BigSixHero",
+        "gtm": "{Add your Google Tag Manager ID here}",
+        "slashingWindow": 10000,
+        "uptimeWindow": 250,
+        "initialPageSize": 30,
+        "secp256k1": false,
+        "bech32PrefixAccAddr": "xyz",
+        "bech32PrefixAccPub": "xyzpub",
+        "bech32PrefixValAddr": "xyzvaloper",
+        "bech32PrefixValPub": "xyzvaloperpub",
+        "bech32PrefixConsAddr": "xyzvalcons",
+        "bech32PrefixConsPub": "xyzvalconspub",
+        "bondDenom": "xyz",
+        "powerReduction": 1000000,
+        "coins": [
+            {
+                "denom": "xyz",
+                "displayName": "XYZ",
+                "fraction": 1000000
+            }
+        ],
+        "modules": {
+            "supply": true,
+            "minting": false,
+            "gov": true
+        },
+        "gasPrice": 0.02,
+        "coingeckoId": "xyz"
+    },
+    "remote":{
+        "rpc":"https://26657-f7b68176-b010-405c-b0e4-a4b53c0e23d1.ws-eu03.gitpod.io",
+        "lcd":"https://1317-f7b68176-b010-405c-b0e4-a4b53c0e23d1.ws-eu03.gitpod.io"
+    },
+    "debug": {
+        "startTimer": true
+    },
+    "params":{
+        "startHeight": 0,
+        "defaultBlockTime": 5000,
+        "validatorUpdateWindow": 300,
+        "blockInterval": 15000,
+        "consensusInterval": 1000,
+        "statusInterval":7500,
+        "signingInfoInterval": 1800000,
+        "proposalInterval": 5000,
+        "missedBlocksInterval": 60000,
+        "delegationInterval": 900000
+    }
+}
+
+
